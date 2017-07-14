@@ -1,7 +1,7 @@
 # NYPL Docs Service
 
-[![Build Status](https://travis-ci.org/NYPL-discovery/bibservice.svg?branch=master)](https://travis-ci.org/NYPL-discovery/bibservice)
-[![Coverage Status](https://coveralls.io/repos/github/NYPL-discovery/bibservice/badge.svg?branch=travis)](https://coveralls.io/github/NYPL-discovery/bibservice?branch=travis)
+[![Build Status](https://travis-ci.org/NYPL-discovery/docsservice.svg?branch=master)](https://travis-ci.org/NYPL-discovery/docsservice)
+[![Coverage Status](https://coveralls.io/repos/github/NYPL-discovery/docsservice/badge.svg?branch=travis)](https://coveralls.io/github/NYPL-discovery/docsservice?branch=travis)
 
 This package is intended to be used as an AWS Lambda Node.js/PHP Microservice to gather Swagger specifications from various URLs and combine them into a single Swagger specification. 
 
@@ -52,7 +52,7 @@ Configures `npm run` commands for each environment for deployment and testing. D
     "deploy-dev": "node-lambda deploy -e qa -f config/var_qa.env -S config/event_sources_qa.json -o arn:aws:iam::224280085904:role/lambda_basic_execution -b subnet-f4fe56af -g sg-1d544067 -p nypl-sandbox",
     "deploy-qa": "node-lambda deploy -e qa -f config/var_qa.env -S config/event_sources_qa.json -o arn:aws:iam::224280085904:role/lambda_basic_execution -b subnet-f4fe56af -g sg-1d544067 -p nypl-sandbox",
     "deploy-production": "node-lambda deploy -e production -f config/var_production.env -S config/event_sources_production.json -b subnet-f4fe56af -g sg-1d544067",
-    "test-recap-bib": "node-lambda run -j tests/events/test-docs-request.json -x tests/events/context.json"
+    "test-docs-request": "node-lambda run -j tests/events/test-docs-request.json -x tests/events/context.json"
 },
 ~~~~
 
