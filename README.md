@@ -1,7 +1,7 @@
 # NYPL Docs Service
 
 [![Build Status](https://travis-ci.org/NYPL/docsservice.svg?branch=master)](https://travis-ci.org/NYPL/docsservice)
-[![Coverage Status](https://coveralls.io/repos/github/NYPL/docsservice/badge.svg?branch=travis)](https://coveralls.io/github/NYPL/docsservice?branch=travis)
+[![Coverage Status](https://coveralls.io/repos/github/NYPL/docsservice/badge.svg?branch=master)](https://coveralls.io/github/NYPL/docsservice?branch=master)
 
 This package is intended to be used as an AWS Lambda Node.js/PHP Microservice to gather Swagger specifications from various URLs and combine them into a single Swagger specification. 
 
