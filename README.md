@@ -88,16 +88,6 @@ php -S localhost:8888 -t . index.php
 
 You can then make a request to the Lambda: `http://localhost:8888/api/v0.1/docs`.
 
-### Swagger Documentation Generator
-
-Create a Swagger route to generate Swagger specification documentation:
-
-~~~~
-$service->get("/swagger", function (Request $request, Response $response) {
-    return SwaggerGenerator::generate(__DIR__ . "/src", $response);
-});
-~~~~
-
 ## Deployment
 
 Before deploying, ensure [configuration files](#configuration) have been properly set up:
