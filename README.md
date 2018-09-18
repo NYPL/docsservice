@@ -77,8 +77,9 @@ You can then make a request to the Lambda: `http://localhost:8888/api/v0.1/docs`
 
 ## Deployment
 
+Travis is set up to automatically deploy to the appropriate environment for development, qa, and production
 
-To deploy to an environment, run the corresponding command:
+To deploy to an environment by hand, run the corresponding command:
 
 ~~~~
 npm run deploy-[development|qa|production]
