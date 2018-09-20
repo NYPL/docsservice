@@ -24,7 +24,6 @@ Homebrew is highly recommended for PHP:
 2. Install required dependencies.
    * Run `npm install` to install Node.js packages.
    * Run `composer install` to install PHP packages.
-   * If you have not already installed `node-lambda` as a global package, run `npm install -g node-lambda`.
 
 ## Configuration
 
@@ -32,7 +31,7 @@ Various files are used to configure and deploy the Lambda.
 
 ### .env
 
-`.env` is used *locally* for two purposes:
+`.env` is used for two purposes:
 
 1. By `node-lambda` for deploying to and configuring Lambda in *all* environments.
    * You should use this file to configure the common settings for the Lambda (e.g. timeout, Node version).
@@ -77,7 +76,7 @@ You can then make a request to the Lambda: `http://localhost:8888/api/v0.1/docs`
 
 ## Deployment
 
-Travis is set up to automatically deploy to the appropriate environment for development, qa, and production
+Travis is set up to automatically deploy to the appropriate environment for development, qa, and production (master branch)
 
 To deploy to an environment by hand, run the corresponding command:
 
