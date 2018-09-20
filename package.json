@@ -4,9 +4,9 @@
   "description": "Lambda for the NYPL Docs Service",
   "main": "index.js",
   "scripts": {
-    "deploy-development": "./node_modules/.bin/node-lambda deploy -e development -P nypl-sandbox -o arn:aws:iam::224280085904:role/lambda_basic_execution -f config/var_development.env -S config/event_sources_development.json",
-    "deploy-qa": "./node_modules/.bin/node-lambda deploy -e qa -P nypl-digital-dev -o arn:aws:iam::946183545209:role/lambda-full-access -f config/var_qa.env -S config/event_sources_qa.json",
-    "deploy-production": "./node_modules/.bin/node-lambda deploy -e production -P nypl-digital-dev -o arn:aws:iam::946183545209:role/lambda-full-access -f config/var_production.env -S config/event_sources_production.json",
+    "deploy-development": "./node_modules/.bin/node-lambda deploy -e development -P nypl-sandbox -role arn:aws:iam::224280085904:role/lambda_basic_execution -f config/var_development.env -S config/event_sources_development.json",
+    "deploy-qa": "./node_modules/.bin/node-lambda deploy -e qa -P nypl-digital-dev -role arn:aws:iam::946183545209:role/lambda-full-access -f config/var_qa.env -S config/event_sources_qa.json",
+    "deploy-production": "./node_modules/.bin/node-lambda deploy -e production -P nypl-digital-dev -role arn:aws:iam::946183545209:role/lambda-full-access -f config/var_production.env -S config/event_sources_production.json",
     "test-docs-request": "node-lambda run -j tests/events/docs-request.json -x tests/events/context.json"
   },
   "repository": {},
