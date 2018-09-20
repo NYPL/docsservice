@@ -1,10 +1,34 @@
-language: php
+language:
+- php
+- node_js
 php:
-  - 7.1
+- 7.1
+node_js: '6.11'
 script:
-  - composer update
-  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+- composer update
+- vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+cache:
+  directories:
+  - node_modules
+  - vendor
 after_success:
-  - vendor/bin/coveralls -v
-  - vendor/bin/phpcs -n --standard=PSR1,PSR2 src/
-  - vendor/bin/phpcbf src/
+- ENVIRONMENT_NAME=$TRAVIS_BRANCH
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ENVIRONMENT_NAME=production; fi
+- vendor/bin/coveralls -v
+- vendor/bin/phpcs -n --standard=PSR1,PSR2 src/
+- vendor/bin/phpcbf src/
+before_deploy:
+- echo "All unit tests passed; Preparing to deploy $TRAVIS_BRANCH"
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: "./scripts/travis-deploy.sh $ENVIRONMENT_NAME"
+  on:
+    all_branches: true
+    condition: "$TRAVIS_BRANCH =~ ^(development|qa|production)$"
+after_deploy: echo "Successfully executed deploy trigger for $TRAVIS_BRANCH"
+env:
+  global:
+  - secure: qQsxs3y8BTfGP68RQNS9aBHx749ugG2bCMRzYox4In5OCIcUDp2fbVKl8i+0H5cT3xHs/7Cj17nsNpTV5+6DuOE8ziBlkvpt4Y+EwlHGSHmFSCIt+t4MgGAyEE7hixiKJBWWShB2zzo2bIPqlBihAd2tniYNUfWXzs4KXXnnaFuEdOVRy6YdYNzaqZDn+/OkifohKBxZ43BIK//8UAoCeoiHLPKAAAIKPaiOhNIEfDHt4J++Lew6v+RTmbxhd8c5q5v9M6WC+0tseGrIyMmyNOt67fhvY9+JKhZZ1V+eGjM49Xwfbt010/2lE2MPswHAtbdOm7ixms35kdDG7EuAZyopfU9VmlMizwt7MEdoG0ne7nPZdyFAYLoLSzUk1p3kWXG0nvPg3BgoBHj8TJ1mEnumaSMJc5Tvf13wY7KL0KQPCMcjAH0zxlk5duw1EBaCuiqe5dEJMoQXHL0lW3x8wXd+k/NLow90/bb8XmpMBpBJm8em+xV0HqyZGI2KJORAnQX8Jjk4GrK3MU8OKM5zCZDBI5rCvJrOtKDbqWltpaQ4t3f/PF2lSRpiv3woeuPP5gX/Ou78STO8hXjVwVM+StDo8xSMmHeCj4V7z0Q7RXYuU65RUU46ZWladKE7iggXKs5XBOyiYFBOP4jmV0vDOH6kGsZXxphDMbstyWJ9jn4=
+  - secure: WE9B8PLIR8qR6v3HEehcoW91G/QKjPeltomQ9/QPQsZNcwR36o3iJhko10vic7LI0yuJWX20uBsMZFrf2ogx+APwG4OHT6Uy/Y5v1U2csxu5zNhIBEU3BF64OOqglj9tccpg/huVx+dDX6ENb+jgtFkH5vEdyHujoJVABNe/+kzCYck5o7UpVjr15rCDPrl0VQ7zrQwjFaZTekn83dMsLE4uo/ScKyao8n607s8D2QkHBSvoCVuvxoUALJhzS2I1WNWwnD03mmoAU6mqlVRCkV88sVJHdVu7Ag8rd0wJeiA1+4jed+MbFtzxiF2njIjROd6vEaz2EkEY4EoKfJ3cL4F8qODgtejhfWoxnYS+v6Eovzgib9hRuj1GJQ99/BpzsboUiTXOe0MqI4E64XW9Mnrs8PEaufn872dXWSKtZAonekCk9CCHL6Z9y4HCE+HbJbblvUMPK/YWGvalE8IuV6SK0RS25DTwo5Y7VhX3CTVvu977+QwXqXHIF4LPZebBEpcx/IhHC2lF9Oq7bsNzj1urJSb7hyk65KIb2CKrR2+SOWBwk4kK7G4YF4iyKyKFotN7cIUrbK3prEC7OSvyKKjUYBiqnfawxAfR6uDZkMnSDTZZ6hNT7xgFgLjcBMJAfaJJbK2pb9esf9Ox++POGNWVzsctsEUhCaGZtK1lcx4=
+  - secure: kFBqL5WupzCs8Fj7W9ekgF7U0mC+V0DpbmAL7oJCk/BXHS+27kZP6OMebDFdJqFyrcgyCYNWRhkXrqmZZ7N7ivB4SQesC8pI4wVNz0Shx+ofLs2U/kPk7r33V/KjK0uKNtKCdc0Cm/6XYke7P//N5VNkUa8X6clmw5PjuKKYsS1tDxT/2JdqaiuM9R8aThHK8slUyxZlNSD6U84O9/lUq8kuIcxh98EL3WPk/fiG6tiZZ6MGfIwsR+uV1+n9GaJsCJQrzyvRMHd3GqKcOjh45anK+dGvidFj8rZn8ErrcbDTtKqLQy6diA1S+rpUhgmyANecjEnqk7K6gPHsK9zngFMPXLrSjJAypWefG+s5spyi5flrUM5BrGkqbLlyNc5wzQvtGo6nbpvkqzmm3kq5ptYE260t+0wcAAA5kgRWdAQK/Xi4g1UYsdpcXurdcBG7MzD6G+443c7payDlpHRnbUlklTiqPRRSZtRGXhpg3CO2UuykS6DSoKPmLNRb93w5ddsLQJlCwlQgs8TMPIFooqzAl9qKBVJy2UmOFXBaRaLdnXdMBqRnv18pReWPrI/Y1pb1DMfCvfkFo0uEFGlM5Qcys6E+ywSJN9kcKygNOlJ6zOWVuYP+aHb4KXOh81KplJ3ROBAX1fvBaCZkqthoo+APN6viaG/nia/D8jWZfL4=
