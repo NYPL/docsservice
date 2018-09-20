@@ -4,6 +4,7 @@ language:
 php:
 - 7.1
 node_js: '6.11'
+install: npm install
 script:
 - composer update
 - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
