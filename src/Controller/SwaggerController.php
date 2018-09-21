@@ -1,24 +1,67 @@
 <?php
 namespace NYPL\Services\Controller;
 
+use Aws\S3\S3Client;
 use GuzzleHttp\Client;
-use NYPL\Starter\APILogger;
 use NYPL\Starter\Config;
 use NYPL\Starter\Controller;
 
 final class SwaggerController extends Controller
 {
-    public function getDocs()
+    /**
+     * @param array $docs
+     *
+     * @throws \NYPL\Starter\APIException
+     */
+    protected function putDocsInS3(array $docs)
     {
-        $client = new Client([
-            'timeout'  => 5
+        $s3Client = new S3Client([
+            'version' => 'latest',
+            'region'=> 'us-east-1'
         ]);
 
-        $baseSpec = [
+        $s3Client->putObject([
+            'ACL' => 'public-read',
+            'Body' => json_encode($docs),
+            'Bucket' => Config::get('DOCS_S3_BUCKET'),
+            'Key' => Config::get('DOCS_S3_KEY'),
+            'CacheControl' => 'max-age=' . Config::get('DOCS_S3_CACHE_SECONDS'),
+            'ContentType' => 'application/json'
+        ]);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/v0.1/docs",
+     *     summary="Get and generate new Platform API documentation",
+     *     tags={"docs"},
+     *     operationId="getDocs",
+     *     produces={"application/json"},
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Generic server error",
+     *         @SWG\Schema(ref="#/definitions/ErrorResponse")
+     *     ),
+     *     security={
+     *         {
+     *             "api_auth": {"openid read:doc"}
+     *         }
+     *     }
+     * )
+     * @return \Slim\Http\Response
+     * @throws \NYPL\Starter\APIException
+     */
+    public function getDocs()
+    {
+        $docs = [
             'swagger' => '2.0',
             'info' => [
                 'title' => Config::get('DOCS_INFO_TITLE'),
-                'description' => Config::get('DOCS_INFO_DESCRIPTION'),
+                'description' => Config::get('DOCS_INFO_DESCRIPTION') . "\n\n*Last generated: " . date('r') . "*",
                 'version' => Config::get('DOCS_INFO_VERSION')
             ],
             'host' => Config::get('DOCS_HOST'),
@@ -31,9 +74,26 @@ final class SwaggerController extends Controller
                     'authorizationUrl' => 'https://isso.nypl.org/oauth/authorize',
                     'tokenUrl' => 'https://isso.nypl.org/oauth/token',
                     'scopes' => [
-                        'openid offline_access api' => 'General API access',
-                        'openid offline_access api patron:read' => 'Patron specific API access',
-                        'openid offline_access api staff:read' => 'Staff specific API access'
+                        'openid' => '',
+                        'admin' => '',
+                        'login:staff' => '',
+                        'read:bib' => '',
+                        'write:bib' => '',
+                        'read:checkin_request' => '',
+                        'write:checkin_request' => '',
+                        'read:checkout_request' => '',
+                        'write:checkout_request' => '',
+                        'read:doc' => '',
+                        'read:hold_request' => '',
+                        'write:hold_request' => '',
+                        'read:item' => '',
+                        'write:item' => '',
+                        'read:patron' => '',
+                        'write:patron' => '',
+                        'read:recall_request' => '',
+                        'write:recall_request' => '',
+                        'read:refile_request' => '',
+                        'write:refile_request' => ''
                     ]
                 ]
             ],
@@ -46,42 +106,48 @@ final class SwaggerController extends Controller
             'definitions' => [],
         ];
 
+        $client = new Client([
+            'timeout'  => 10
+        ]);
+
         $addedSpecsUrls = explode(',', Config::get('DOCS_URLS'));
 
         foreach ($addedSpecsUrls as $addedSpecUrl) {
-            try {
-                $response = $client->get($addedSpecUrl);
+            $response = $client->get($addedSpecUrl);
 
-                $addedSpecUrl = json_decode((string) $response->getBody(), true);
+            $addedSpecUrl = json_decode((string) $response->getBody(), true);
 
-                if (isset($addedSpecUrl['paths'])) {
-                    $baseSpec['paths'] = array_merge($baseSpec['paths'], $addedSpecUrl['paths']);
+            if (is_array($addedSpecUrl['paths'])) {
+                foreach ($addedSpecUrl['paths'] as $path => $pathArray) {
+                    if (!isset($docs['paths'][$path])) {
+                        $docs['paths'][$path] = [];
+                    }
+
+                    $docs['paths'][$path] = array_merge($docs['paths'][$path], $pathArray);
                 }
+            }
 
-                if (isset($addedSpecUrl['tags'])) {
-                    $baseSpec['tags'] = array_merge($baseSpec['tags'], $addedSpecUrl['tags']);
-                }
+            if (isset($addedSpecUrl['tags'])) {
+                $docs['tags'] = array_merge($docs['tags'], $addedSpecUrl['tags']);
+            }
 
-                if (isset($addedSpecUrl['definitions'])) {
-                    $baseSpec['definitions'] = array_merge($baseSpec['definitions'], $addedSpecUrl['definitions']);
-                }
-            } catch (\Exception $exception) {
-                APILogger::addError(
-                    'Unable to retrieve Swagger specification from ' . $addedSpecUrl . ': ' . $exception->getMessage()
-                );
+            if (isset($addedSpecUrl['definitions'])) {
+                $docs['definitions'] = array_merge($docs['definitions'], $addedSpecUrl['definitions']);
             }
         }
 
-        if (isset($baseSpec['tags'])) {
+        if (isset($docs['tags'])) {
             array_multisort(
-                array_column($baseSpec['tags'], 'description'),
-                $baseSpec['tags']
+                array_column($docs['tags'], 'description'),
+                $docs['tags']
             );
 
-            ksort($baseSpec['paths']);
-            ksort($baseSpec['definitions']);
+            ksort($docs['paths']);
+            ksort($docs['definitions']);
         }
 
-        return $this->getResponse()->withJson($baseSpec);
+        $this->putDocsInS3($docs);
+
+        return $this->getResponse()->withJson($docs);
     }
 }

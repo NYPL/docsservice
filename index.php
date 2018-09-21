@@ -9,9 +9,16 @@ use NYPL\Starter\Config;
 use NYPL\Starter\ErrorHandler;
 
 try {
-    Config::initialize(__DIR__);
+    Config::initialize(__DIR__ . '/config');
 
     $service = new Service();
+
+    $service->get("/docs/doc", function (Request $request, Response $response) {
+        return \NYPL\Starter\SwaggerGenerator::generate(
+            [__DIR__ . "/src", __DIR__ . "/vendor/nypl/microservice-starter/src"],
+            $response
+        );
+    });
 
     $service->get("/api/v0.1/docs", function (Request $request, Response $response) {
         $controller = new Controller\SwaggerController($request, $response);
