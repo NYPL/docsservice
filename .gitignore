@@ -1,6 +1,7 @@
 node_modules
 dist
 *.swp
+config/local.env
 vendor
 build
 .lambda
