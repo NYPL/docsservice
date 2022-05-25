@@ -1,6 +1,6 @@
 {
-  "name": "nypl-services",
-  "description": "NYPL Services Package",
+  "name": "nypl/docs-service",
+  "description": "NYPL Docs Service",
   "require": {
     "nypl/microservice-starter": "1.2.29"
   },
