@@ -1,7 +1,7 @@
 # NYPL Docs Service
 
-[![Build Status](https://travis-ci.org/NYPL/docsservice.svg?branch=master)](https://travis-ci.org/NYPL/docsservice)
-[![Coverage Status](https://coveralls.io/repos/github/NYPL/docsservice/badge.svg?branch=master)](https://coveralls.io/github/NYPL/docsservice?branch=master)
+[![Build Status](https://travis-ci.org/NYPL/docsservice.svg?branch=development)](https://travis-ci.org/NYPL/docsservice)
+[![Coverage Status](https://coveralls.io/repos/github/NYPL/docsservice/badge.svg?branch=development)](https://coveralls.io/github/NYPL/docsservice?branch=development)
 
 This app serves the following:
  * `GET /api/v0.1/docs` : Builds a combined Swagger doc from the Swagger partials configured in `DOCS_URLS`, writes the result to S3, and serves it.
@@ -79,7 +79,7 @@ You can then make a request to the Lambda: `http://localhost:8888/api/v0.1/docs`
 
 ## Deployment
 
-Travis is set up to automatically deploy to the appropriate environment for development, qa, and production (master branch)
+Travis is set up to automatically deploy to the appropriate environment for development, qa, and production (main branch)
 
 To deploy to an environment by hand, run the corresponding command:
 
