@@ -86,3 +86,7 @@ To deploy to an environment by hand, run the corresponding command:
 ~~~~
 npm run deploy-[development|qa|production]
 ~~~~
+
+## Contributing
+
+This repo uses the [Development-QA-Main Git Workflow](https://github.com/NYPL/engineering-general/blob/master/standards/git-workflow.md#development-qa-main)
