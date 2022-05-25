@@ -1,10 +1,9 @@
 language:
-- php
 - node_js
+- php
 php:
 - 7.1
 install:
-- nvm use
 - npm install
 script:
 - composer update
