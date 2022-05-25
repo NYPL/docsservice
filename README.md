@@ -3,13 +3,17 @@
 [![Build Status](https://travis-ci.org/NYPL/docsservice.svg?branch=master)](https://travis-ci.org/NYPL/docsservice)
 [![Coverage Status](https://coveralls.io/repos/github/NYPL/docsservice/badge.svg?branch=master)](https://coveralls.io/github/NYPL/docsservice?branch=master)
 
+This app serves the following:
+ * `GET /api/v0.1/docs` : Builds a combined Swagger doc from the Swagger partials configured in `DOCS_URLS`, writes the result to S3, and serves it.
+ * `GET /docs/doc` : Serves the Swagger partial for this service (i.e. documents `/api/v0.1/docs`)
+
 This package is intended to be used as an AWS Lambda Node.js/PHP Microservice to gather Swagger specifications from various URLs and combine them into a single Swagger specification.
 
 This package uses the [NYPL PHP Microservice Starter](https://github.com/NYPL/php-microservice-starter) and adheres to [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/), and [PSR-4](http://www.php-fig.org/psr/psr-4/) (using the [Composer](https://getcomposer.org/) autoloader).
 
 ## Requirements
 
-* Node.js >=6.0
+* Node.js >= 14
 * PHP >=7.0
   * [pdo_pdgsql](http://php.net/manual/en/ref.pdo-pgsql.php)
 
@@ -17,12 +21,11 @@ Homebrew is highly recommended for PHP:
   * `brew install php71`
   * `brew install php71-pdo-pgsql`
 
-
 ## Installation
 
 1. Clone the repo.
 2. Install required dependencies.
-   * Run `npm install` to install Node.js packages.
+   * Run `nvm use; npm install` to install Node.js packages.
    * Run `composer install` to install PHP packages.
 
 ## Configuration
