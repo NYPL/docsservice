@@ -112,6 +112,12 @@ final class SwaggerController extends Controller
 
         $addedSpecsUrls = explode(',', Config::get('DOCS_URLS'));
 
+        # Add default domain to URLs that don't have them:
+        $addedSpecsUrls = array_map(function ($url) {
+          if (substr($url, 0, 1) == '/') return "https://" . Config::get('DOCS_HOST') . $url;
+          return $url;
+        }, $addedSpecsUrls);
+
         foreach ($addedSpecsUrls as $addedSpecUrl) {
             $response = $client->get($addedSpecUrl);
 
