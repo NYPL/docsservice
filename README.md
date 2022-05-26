@@ -1,7 +1,7 @@
 # NYPL Docs Service
 
-[![Build Status](https://travis-ci.org/NYPL/docsservice.svg?branch=master)](https://travis-ci.org/NYPL/docsservice)
-[![Coverage Status](https://coveralls.io/repos/github/NYPL/docsservice/badge.svg?branch=master)](https://coveralls.io/github/NYPL/docsservice?branch=master)
+[![Build Status](https://travis-ci.org/NYPL/docsservice.svg?branch=development)](https://travis-ci.org/NYPL/docsservice)
+[![Coverage Status](https://coveralls.io/repos/github/NYPL/docsservice/badge.svg?branch=development)](https://coveralls.io/github/NYPL/docsservice?branch=development)
 
 This app serves the following:
  * `GET /api/v0.1/docs` : Builds a combined Swagger doc from the Swagger partials configured in `DOCS_URLS`, writes the result to S3, and serves it.
@@ -57,6 +57,24 @@ Configures environment variables specific to each environment.
 
 Configures Lambda event sources (triggers) specific to each environment. An empty object, but necessary
 
+### Deployment config discrepancies
+
+In general we would like the `DOCS_URLS` config to be equal across deployments. In practice that's not possible because docs endpoints aren't available for all apps in all environments. Some known differences:
+
+**In development**, we can not use the following docs endpoints because they either don't exist or are broken:
+ - /docs/check-in-cards
+ - /docs/checkin-requests-sync
+ - /docs/checkout-requests-sync
+ - /docs/discovery
+ - /docs/is-research
+ - /docs/mylibrarynyc
+ - /docs/patrons-validations
+ - /docs/refile-requests
+ - /docs/sync-item-metadata-to-scsb
+
+**In qa**, we can not use the following docs endpoints because they either don't exist or are broken:
+ - /docs/barcode
+
 ## Usage
 
 ### Process a Lambda Event
@@ -79,7 +97,7 @@ You can then make a request to the Lambda: `http://localhost:8888/api/v0.1/docs`
 
 ## Deployment
 
-Travis is set up to automatically deploy to the appropriate environment for development, qa, and production (master branch)
+Travis is set up to automatically deploy to the appropriate environment for development, qa, and production (main branch)
 
 To deploy to an environment by hand, run the corresponding command:
 
