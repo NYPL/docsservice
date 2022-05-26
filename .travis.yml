@@ -26,8 +26,8 @@ deploy:
   script: "./scripts/travis-deploy.sh $ENVIRONMENT_NAME"
   on:
     all_branches: true
-    condition: "$TRAVIS_BRANCH =~ ^(development|qa|production)$"
-after_deploy: echo "Successfully executed deploy trigger for $TRAVIS_BRANCH"
+    condition: "$ENVIRONMENT_NAME =~ ^(development|qa|production)$"
+after_deploy: echo "Successfully executed deploy trigger for $ENVIRONMENT_NAME"
 env:
   global:
     secure: WsqiVz6x1S9tKb2rMnr1T7xa/C54c4Nw1mI9ovdcYwmYeHAatuM1Wcur80byTlZSFof823R3N6ddYeAS4k0lF2tOg28HTOu4gCvPJ+QiBlNzo70E+cKlcKH2gBA+kWzXIqA9MA5qD4kqadLj2bbaAO6bFo1NVKpbNosRovB8o5jnVpZeyqiu4Z3FVVPclGC+1cTbgT4TRWee3BkkzhPR75sd/1Kj4s9yQS3QlTHKgYKNvjaOjrcKNnjyn4eQyVEjDZ2c9xmltpk6TXrM+fRrk9amv66bRPzOfNwSrhb/9px4f5QksiNyb52NHdavdDHQBL3LwIkkvoTwjHCpn43bMABTEn/WzMNA2LgDrTXfm92fM5wOk3yS6JouhrdBXERtufcl6lnbNjdcRBY0Jca711IDdjoVwP5I9RXHydv+zHK6ds0ielrV4+Xrjm66xcYQUiJR6sak59ANT9AP69RHGAwpsC+p57JQ92g5lfN6vyFbENwRrNMR7Dh9AsoZUHcSGoTO/REQaWcjuZGRHbasaykLsY1SWcAGthDjieCJC6R3scigOTp4cLKDK6tYazhepni1JWm7qrRXZSRWViW7ENSH6E1UP1eUSqdKb9iGrxFMW6pR7fzzpop0OkUOxPUTB/Ptt5SRf53GMzzRklwsqdBZHikPxeQYse/pOFmPCeY=
