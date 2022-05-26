@@ -57,6 +57,24 @@ Configures environment variables specific to each environment.
 
 Configures Lambda event sources (triggers) specific to each environment. An empty object, but necessary
 
+### Deployment config discrepancies
+
+In general we would like the `DOCS_URLS` config to be equal across deployments. In practice that's not possible because docs endpoints aren't available for all apps in all environments. Some known differences:
+
+**In development**, we can not use the following docs endpoints because they either don't exist or are broken:
+ - /docs/check-in-cards
+ - /docs/checkin-requests-sync
+ - /docs/checkout-requests-sync
+ - /docs/discovery
+ - /docs/is-research
+ - /docs/mylibrarynyc
+ - /docs/patrons-validations
+ - /docs/refile-requests
+ - /docs/sync-item-metadata-to-scsb
+
+**In qa**, we can not use the following docs endpoints because they either don't exist or are broken:
+ - /docs/barcode
+
 ## Usage
 
 ### Process a Lambda Event
