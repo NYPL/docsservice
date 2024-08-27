@@ -72,9 +72,6 @@ In general we would like the `DOCS_URLS` config to be equal across deployments. 
  - /docs/refile-requests
  - /docs/sync-item-metadata-to-scsb
 
-**In qa**, we can not use the following docs endpoints because they either don't exist or are broken:
- - /docs/barcode
-
 ## Usage
 
 ### Process a Lambda Event
