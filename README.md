@@ -1,3 +1,6 @@
+# Deprecated
+As of December 2024, this repo is retired in favor of the Python version at https://github.com/NYPL/docs-service
+
 # NYPL Docs Service
 
 [![Build Status](https://travis-ci.org/NYPL/docsservice.svg?branch=development)](https://travis-ci.org/NYPL/docsservice)
